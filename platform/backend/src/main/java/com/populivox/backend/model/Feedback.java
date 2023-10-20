@@ -23,7 +23,7 @@ public class Feedback {
 
     @ManyToOne
     @JoinColumn(name = "user_id")
-    private User user;
+    private WebsiteUser websiteUser;
 
     public enum Sentiment {
         POSITIVE, NEGATIVE, NEUTRAL

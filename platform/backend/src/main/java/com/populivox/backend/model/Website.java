@@ -14,7 +14,10 @@ public class Website {
     private String name;
 
     @OneToMany(mappedBy = "associatedWebsite")
-    private List<User> users;
+    private List<WebsiteAdmin> websiteAdmins;
+
+    @OneToMany(mappedBy = "associatedWebsite")
+    private List<WebsiteUser> websiteUsers;
 
     @OneToMany(mappedBy = "website")
     private List<Feedback> feedbacks;
