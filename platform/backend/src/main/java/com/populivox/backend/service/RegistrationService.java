@@ -1,6 +1,7 @@
 package com.populivox.backend.service;
 
 import com.populivox.backend.dto.RegistrationRequest;
+import com.populivox.backend.dto.RegistrationResponse;
 import com.populivox.backend.model.WebsiteAdmin;
 import com.populivox.backend.repository.WebsiteAdminRepository;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -18,7 +19,7 @@ public class RegistrationService {
         this.passwordEncoder = passwordEncoder;
     }
 
-    public WebsiteAdmin register(RegistrationRequest request) {
+    public RegistrationResponse register(RegistrationRequest request) {
         if (websiteAdminRepository.existsByEmail(request.getEmail())) {
             throw new RuntimeException("Email already exists.");
         }
@@ -26,6 +27,7 @@ public class RegistrationService {
         websiteAdmin.setEmail(request.getEmail());
         websiteAdmin.setPassword(passwordEncoder.encode(request.getPassword()));
 
-        return websiteAdminRepository.save(websiteAdmin);
+        websiteAdmin = websiteAdminRepository.save(websiteAdmin);
+        return new RegistrationResponse(websiteAdmin.getEmail(), "Registration successful");
     }
 }

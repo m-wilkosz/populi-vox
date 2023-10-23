@@ -1,7 +1,7 @@
 package com.populivox.backend.controller;
 
 import com.populivox.backend.dto.RegistrationRequest;
-import com.populivox.backend.model.WebsiteAdmin;
+import com.populivox.backend.dto.RegistrationResponse;
 import com.populivox.backend.service.RegistrationService;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -19,7 +19,8 @@ public class RegistrationController {
     }
 
     @PostMapping
-    public WebsiteAdmin register(@RequestBody RegistrationRequest request) {
-        return registrationService.register(request);
+    public RegistrationResponse register(@RequestBody RegistrationRequest request) {
+        RegistrationResponse registrationResponse = registrationService.register(request);
+        return registrationResponse;
     }
 }
