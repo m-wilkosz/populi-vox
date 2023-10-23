@@ -3,6 +3,10 @@ package com.populivox.backend.model;
 import jakarta.persistence.*;
 import lombok.*;
 import org.hibernate.Hibernate;
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.Email;
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
 import java.util.Objects;
 
 @Getter
@@ -17,10 +21,15 @@ public class WebsiteAdmin {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @NotBlank(message = "Email must not be blank")
+    @Email(message = "Invalid email format")
     private String email;
 
+    @NotBlank(message = "Password must not be blank")
+    @Size(min = 10, message = "Password must be at least 10 characters long")
     private String password;
 
+    @NotNull(message = "Admin must be associated with a website")
     @ManyToOne
     @JoinTable(name = "websiteadmin_website",
             joinColumns = @JoinColumn(name = "websiteadmin_id"),
