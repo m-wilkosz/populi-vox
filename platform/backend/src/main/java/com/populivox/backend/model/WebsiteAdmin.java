@@ -7,6 +7,7 @@ import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
+import java.time.LocalDateTime;
 import java.util.Objects;
 
 @Getter
@@ -28,6 +29,15 @@ public class WebsiteAdmin {
     @NotBlank(message = "Password must not be blank")
     @Size(min = 10, message = "Password must be at least 10 characters long")
     private String password;
+
+    @Column(name = "email_verified")
+    private boolean emailVerified = false;
+
+    @Column(name = "email_verification_token")
+    private String emailVerificationToken;
+
+    @Column(name = "email_verification_expiry")
+    private LocalDateTime emailVerificationExpiry;
 
     @NotNull(message = "Admin must be associated with a website")
     @ManyToOne
