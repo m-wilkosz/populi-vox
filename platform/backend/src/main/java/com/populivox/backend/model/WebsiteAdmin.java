@@ -24,6 +24,7 @@ public class WebsiteAdmin {
 
     @NotBlank(message = "Email must not be blank")
     @Email(message = "Invalid email format")
+    @Column(unique = true)
     private String email;
 
     @NotBlank(message = "Password must not be blank")
