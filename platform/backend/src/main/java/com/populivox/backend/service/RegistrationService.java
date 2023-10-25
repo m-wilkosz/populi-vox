@@ -61,7 +61,7 @@ public class RegistrationService {
 
     private void sendVerificationEmail(String email, String token) {
         // Create verification URL
-        String verificationUrl = "https://populivox.com/verify-email?token=" + token;
+        String verificationUrl = "http://localhost:8080/verify-email?token=" + token;
 
         // Create email content
         String content = "<p>Welcome to PopuliVox!</p>"
