@@ -5,9 +5,12 @@ import com.populivox.backend.dto.RegistrationResponse;
 import com.populivox.backend.exception.EmailAlreadyExistsException;
 import com.populivox.backend.model.WebsiteAdmin;
 import com.populivox.backend.repository.WebsiteAdminRepository;
+import jakarta.mail.MessagingException;
+import jakarta.mail.internet.MimeMessage;
 import jakarta.transaction.Transactional;
-import org.springframework.mail.SimpleMailMessage;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.mail.javamail.JavaMailSender;
+import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.thymeleaf.TemplateEngine;
@@ -24,6 +27,12 @@ public class RegistrationService {
     private final JavaMailSender mailSender;
 
     private final TemplateEngine templateEngine;
+
+    @Value("${spring.mail.username}")
+    private String senderAddress;
+
+    @Value("${spring.baseUrl}")
+    private String baseUrl;
 
     public RegistrationService(WebsiteAdminRepository websiteAdminRepository,
                                PasswordEncoder passwordEncoder,
@@ -60,19 +69,26 @@ public class RegistrationService {
     }
 
     private void sendVerificationEmail(String email, String token) {
-        // Create verification URL
-        String verificationUrl = "http://localhost:8080/verify-email?token=" + token;
+        try {
+            // Create verification URL
+            String verificationUrl = baseUrl + "/verify-email?token=" + token;
 
-        // Create email content
-        String content = "<p>Welcome to PopuliVox!</p>"
-                + "<p>Please click the link below to verify your email:</p>"
-                + "<a href=\"" + verificationUrl + "\">Verify Email</a>";
+            // Create email content
+            String content = "<p>Welcome to PopuliVox!</p>"
+                    + "<p>Please click the link below to verify your email:</p>"
+                    + "<a href=\"" + verificationUrl + "\">Verify</a>";
 
-        // Send email
-        SimpleMailMessage mailMessage = new SimpleMailMessage();
-        mailMessage.setTo(email);
-        mailMessage.setSubject("Verify your email - PopuliVox");
-        mailMessage.setText(content);
-        mailSender.send(mailMessage);
+            // Send email
+            MimeMessage mailMessage = mailSender.createMimeMessage();
+            MimeMessageHelper helper = new MimeMessageHelper(mailMessage, "utf-8");
+            helper.setTo(email);
+            helper.setFrom(senderAddress);
+            helper.setSubject("Verify your email - PopuliVox");
+            helper.setText(content, true);
+            mailSender.send(mailMessage);
+        } catch (MessagingException e) {
+            System.err.println("Error sending email: " + e.getMessage());
+            // TODO Log the error, notify an administrator, or even retry sending the email
+        }
     }
 }
