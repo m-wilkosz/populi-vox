@@ -16,6 +16,8 @@ import org.springframework.stereotype.Service;
 import org.thymeleaf.TemplateEngine;
 import java.time.LocalDateTime;
 import java.util.UUID;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 @Service
 public class RegistrationService {
@@ -33,6 +35,8 @@ public class RegistrationService {
 
     @Value("${spring.baseUrl}")
     private String baseUrl;
+
+    private static final Logger logger = LoggerFactory.getLogger(RegistrationService.class);
 
     public RegistrationService(WebsiteAdminRepository websiteAdminRepository,
                                PasswordEncoder passwordEncoder,
@@ -87,8 +91,9 @@ public class RegistrationService {
             helper.setText(content, true);
             mailSender.send(mailMessage);
         } catch (MessagingException e) {
-            System.err.println("Error sending email: " + e.getMessage());
-            // TODO Log the error, notify an administrator, or even retry sending the email
+            logger.error("Error sending verification email to {}: {}", email, e.getMessage());
+            logger.error("Error sending verification email", e);
+            // TODO Notify an administrator, or even retry sending the email
         }
     }
 }
