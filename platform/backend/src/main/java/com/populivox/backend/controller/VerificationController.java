@@ -8,7 +8,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-@RequestMapping("/api/verify")
+@RequestMapping("/verify-email")
 public class VerificationController {
 
     private final VerificationService verificationService;
@@ -17,7 +17,7 @@ public class VerificationController {
         this.verificationService = verificationService;
     }
 
-    @GetMapping("/email")
+    @GetMapping
     public VerificationResponse verifyEmail(@RequestParam String token) {
         return verificationService.verifyEmail(token);
     }
