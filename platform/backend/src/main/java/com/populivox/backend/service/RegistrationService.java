@@ -18,6 +18,7 @@ import java.time.LocalDateTime;
 import java.util.UUID;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.thymeleaf.context.Context;
 
 @Service
 public class RegistrationService {
@@ -77,10 +78,12 @@ public class RegistrationService {
             // Create verification URL
             String verificationUrl = baseUrl + "/verify-email?token=" + token;
 
-            // Create email content
-            String content = "<p>Welcome to PopuliVox!</p>"
-                    + "<p>Please click the link below to verify your email:</p>"
-                    + "<a href=\"" + verificationUrl + "\">Verify</a>";
+            // Prepare the evaluation context
+            final Context ctx = new Context();
+            ctx.setVariable("verificationUrl", verificationUrl);
+
+            // Create the HTML body using Thymeleaf
+            final String htmlContent = this.templateEngine.process("verificationEmail.html", ctx);
 
             // Send email
             MimeMessage mailMessage = mailSender.createMimeMessage();
@@ -88,7 +91,7 @@ public class RegistrationService {
             helper.setTo(email);
             helper.setFrom(senderAddress);
             helper.setSubject("Verify your email - PopuliVox");
-            helper.setText(content, true);
+            helper.setText(htmlContent, true);
             mailSender.send(mailMessage);
         } catch (MessagingException e) {
             logger.error("Error sending verification email to {}: {}", email, e.getMessage());
