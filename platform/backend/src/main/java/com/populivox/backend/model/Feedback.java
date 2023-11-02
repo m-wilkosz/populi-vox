@@ -1,7 +1,14 @@
 package com.populivox.backend.model;
 
 import jakarta.persistence.*;
+import lombok.Getter;
+import lombok.RequiredArgsConstructor;
+import lombok.Setter;
+import javax.validation.constraints.NotNull;
 
+@Getter
+@Setter
+@RequiredArgsConstructor
 @Entity
 @Table(name = "feedbacks")
 public class Feedback {
@@ -17,13 +24,15 @@ public class Feedback {
     @Enumerated(EnumType.STRING)
     private Sentiment sentiment;
 
-    @ManyToOne
-    @JoinColumn(name = "website_id")
-    private Website website;
-
+    @NotNull(message = "Feedback must be associated with a user")
     @ManyToOne
     @JoinColumn(name = "user_id")
-    private WebsiteUser websiteUser;
+    private WebsiteUser associatedUser;
+
+    @NotNull(message = "Feedback must be associated with a website")
+    @ManyToOne
+    @JoinColumn(name = "website_id")
+    private Website associatedWebsite;
 
     public enum Sentiment {
         POSITIVE, NEGATIVE, NEUTRAL

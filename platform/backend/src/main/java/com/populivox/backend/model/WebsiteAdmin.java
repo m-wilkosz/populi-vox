@@ -42,9 +42,7 @@ public class WebsiteAdmin {
 
     @NotNull(message = "Admin must be associated with a website")
     @ManyToOne
-    @JoinTable(name = "websiteadmin_website",
-            joinColumns = @JoinColumn(name = "websiteadmin_id"),
-            inverseJoinColumns = @JoinColumn(name = "website_id"))
+    @JoinColumn(name = "website_id")
     private Website associatedWebsite;
 
     @Override

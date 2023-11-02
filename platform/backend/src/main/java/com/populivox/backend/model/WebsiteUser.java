@@ -1,8 +1,15 @@
 package com.populivox.backend.model;
 
 import jakarta.persistence.*;
+import lombok.Getter;
+import lombok.RequiredArgsConstructor;
+import lombok.Setter;
 import javax.validation.constraints.NotNull;
+import java.util.List;
 
+@Getter
+@Setter
+@RequiredArgsConstructor
 @Entity
 @Table(name = "websiteusers")
 public class WebsiteUser {
@@ -13,8 +20,9 @@ public class WebsiteUser {
 
     @NotNull(message = "User must be associated with a website")
     @ManyToOne
-    @JoinTable(name = "websiteuser_website",
-            joinColumns = @JoinColumn(name = "websiteuser_id"),
-            inverseJoinColumns = @JoinColumn(name = "website_id"))
+    @JoinColumn(name = "website_id")
     private Website associatedWebsite;
+
+    @OneToMany(mappedBy = "associatedUser", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
+    private List<Feedback> userFeedbacks;
 }
