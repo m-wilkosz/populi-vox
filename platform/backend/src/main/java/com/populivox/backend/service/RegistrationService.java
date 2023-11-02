@@ -3,6 +3,7 @@ package com.populivox.backend.service;
 import com.populivox.backend.dto.RegistrationRequest;
 import com.populivox.backend.dto.RegistrationResponse;
 import com.populivox.backend.exception.EmailAlreadyExistsException;
+import com.populivox.backend.exception.EmailSendingFailedException;
 import com.populivox.backend.model.WebsiteAdmin;
 import com.populivox.backend.repository.WebsiteAdminRepository;
 import jakarta.mail.MessagingException;
@@ -73,7 +74,7 @@ public class RegistrationService {
                 "Registration successful. Please check your email to verify your account.");
     }
 
-    private void sendVerificationEmail(String email, String token) {
+    private void sendVerificationEmail(String email, String token) throws EmailSendingFailedException {
         try {
             // Create verification URL
             String verificationUrl = baseUrl + "/verify-email?token=" + token;
@@ -95,7 +96,7 @@ public class RegistrationService {
             mailSender.send(mailMessage);
         } catch (MessagingException e) {
             logger.error("Error sending verification email to {}: {}", email, e.getMessage());
-            logger.error("Error sending verification email", e);
+            throw new EmailSendingFailedException("Error sending verification email to " + email, e);
             // TODO Notify an administrator, or even retry sending the email
         }
     }
