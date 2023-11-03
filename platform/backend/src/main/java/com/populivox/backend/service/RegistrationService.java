@@ -14,6 +14,7 @@ import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.web.util.UriComponentsBuilder;
 import org.thymeleaf.TemplateEngine;
 import java.time.LocalDateTime;
 import java.util.UUID;
@@ -77,7 +78,10 @@ public class RegistrationService {
     private void sendVerificationEmail(String email, String token) throws EmailSendingFailedException {
         try {
             // Create verification URL
-            String verificationUrl = baseUrl + "/verify-email?token=" + token;
+            String verificationUrl = UriComponentsBuilder.fromHttpUrl(baseUrl)
+                    .path("/verify-email")
+                    .queryParam("token", token)
+                    .toUriString();
 
             // Prepare the evaluation context
             final Context ctx = new Context();
