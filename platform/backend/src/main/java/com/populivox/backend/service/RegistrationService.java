@@ -4,8 +4,10 @@ import com.populivox.backend.dto.RegistrationRequest;
 import com.populivox.backend.dto.RegistrationResponse;
 import com.populivox.backend.exception.EmailAlreadyExistsException;
 import com.populivox.backend.exception.EmailSendingFailedException;
+import com.populivox.backend.model.Website;
 import com.populivox.backend.model.WebsiteAdmin;
 import com.populivox.backend.repository.WebsiteAdminRepository;
+import com.populivox.backend.repository.WebsiteRepository;
 import jakarta.mail.MessagingException;
 import jakarta.mail.internet.MimeMessage;
 import jakarta.transaction.Transactional;
@@ -17,6 +19,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.util.UriComponentsBuilder;
 import org.thymeleaf.TemplateEngine;
 import java.time.LocalDateTime;
+import java.util.List;
 import java.util.UUID;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -26,6 +29,8 @@ import org.thymeleaf.context.Context;
 public class RegistrationService {
 
     private final WebsiteAdminRepository websiteAdminRepository;
+
+    private final WebsiteRepository websiteRepository;
 
     private final PasswordEncoder passwordEncoder;
 
@@ -42,10 +47,12 @@ public class RegistrationService {
     private static final Logger logger = LoggerFactory.getLogger(RegistrationService.class);
 
     public RegistrationService(WebsiteAdminRepository websiteAdminRepository,
+                               WebsiteRepository websiteRepository,
                                PasswordEncoder passwordEncoder,
                                JavaMailSender mailSender,
                                TemplateEngine templateEngine) {
         this.websiteAdminRepository = websiteAdminRepository;
+        this.websiteRepository = websiteRepository;
         this.passwordEncoder = passwordEncoder;
         this.mailSender = mailSender;
         this.templateEngine = templateEngine;
@@ -60,6 +67,14 @@ public class RegistrationService {
         WebsiteAdmin websiteAdmin = new WebsiteAdmin();
         websiteAdmin.setEmail(request.getEmail());
         websiteAdmin.setPassword(passwordEncoder.encode(request.getPassword()));
+
+        // Create website instance
+        Website website = new Website();
+        website.setName(request.getWebsiteName());
+
+        // Create relationship between website and website's admin
+        websiteAdmin.setAssociatedWebsite(website);
+        website.setWebsiteAdmins(List.of(websiteAdmin));
 
         // Generate email verification token
         String token = UUID.randomUUID().toString();

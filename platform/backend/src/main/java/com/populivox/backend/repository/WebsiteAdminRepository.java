@@ -9,4 +9,6 @@ public interface WebsiteAdminRepository extends JpaRepository<WebsiteAdmin, Long
     boolean existsByEmail(String email);
 
     Optional<WebsiteAdmin> findByEmailVerificationToken(String token);
+
+    Optional<WebsiteAdmin> findByAssociatedWebsiteId(Long websiteId);
 }

@@ -27,7 +27,6 @@ public class Website {
     @OneToMany(mappedBy = "associatedWebsite", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<WebsiteAdmin> websiteAdmins;
 
-    @NotNull(message = "Website must have users")
     @OneToMany(mappedBy = "associatedWebsite", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
     private List<WebsiteUser> websiteUsers;
 

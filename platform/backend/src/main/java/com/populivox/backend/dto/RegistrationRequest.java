@@ -18,4 +18,7 @@ public class RegistrationRequest {
     @Pattern(regexp = "^(?=.*[0-9])(?=.*[a-zA-Z])(?=.*[!@#$%^&*()_+]).{10,}$",
             message = "Password must contain at least one letter, one number, and one special character.")
     private String password;
+
+    @NotBlank(message = "Website name must not be blank")
+    private String websiteName;
 }
