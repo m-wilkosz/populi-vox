@@ -58,12 +58,35 @@ public class RegistrationService {
         this.templateEngine = templateEngine;
     }
 
+    /**
+     * Registers a new website and its admin based on the given registration request.
+     * This method encapsulates the business logic for registering a new website admin
+     * along with the creation of the associated website entity.
+     *
+     * <p>Steps involved in the registration process include:
+     * <ul>
+     *     <li>Validating the uniqueness of the admin's email.</li>
+     *     <li>Creating and persisting a new {@link WebsiteAdmin} entity.</li>
+     *     <li>Setting up a new {@link Website} entity associated with the admin.</li>
+     *     <li>Generating an email verification token.</li>
+     *     <li>Sending an email for verification purposes.</li>
+     * </ul>
+     *
+     * @param request The {@link RegistrationRequest} containing necessary information
+     *                such as admin's email, password, and website name for registration.
+     * @return A {@link RegistrationResponse} that contains the email of the registered admin
+     *         and a message indicating the successful completion of the registration process.
+     * @throws EmailAlreadyExistsException if an admin with the given email already exists.
+     * @throws EmailSendingFailedException if there is an issue with sending the verification email.
+     */
     @Transactional
     public RegistrationResponse register(RegistrationRequest request) {
         // Check if email already exists
         if (websiteAdminRepository.existsByEmail(request.getEmail())) {
             throw new EmailAlreadyExistsException(request.getEmail());
         }
+
+        // Create website's admin instance
         WebsiteAdmin websiteAdmin = new WebsiteAdmin();
         websiteAdmin.setEmail(request.getEmail());
         websiteAdmin.setPassword(passwordEncoder.encode(request.getPassword()));
@@ -75,6 +98,8 @@ public class RegistrationService {
         // Create relationship between website and website's admin
         websiteAdmin.setAssociatedWebsite(website);
         website.setWebsiteAdmins(List.of(websiteAdmin));
+
+        website = websiteRepository.save(website);
 
         // Generate email verification token
         String token = UUID.randomUUID().toString();

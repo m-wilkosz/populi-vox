@@ -2,18 +2,13 @@ package com.populivox.backend.model;
 
 import jakarta.persistence.*;
 import lombok.*;
-import org.hibernate.Hibernate;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import java.time.LocalDateTime;
-import java.util.Objects;
 
-@Getter
-@Setter
-@ToString
-@RequiredArgsConstructor
+@Data
 @Entity
 @Table(name = "websiteadmins")
 public class WebsiteAdmin {
@@ -31,12 +26,15 @@ public class WebsiteAdmin {
     @Size(min = 10, message = "Password must be at least 10 characters long")
     private String password;
 
+    @NotNull
     @Column(name = "email_verified")
     private boolean emailVerified = false;
 
+    @NotNull
     @Column(name = "email_verification_token")
     private String emailVerificationToken;
 
+    @NotNull
     @Column(name = "email_verification_expiry")
     private LocalDateTime emailVerificationExpiry;
 
@@ -44,17 +42,4 @@ public class WebsiteAdmin {
     @ManyToOne
     @JoinColumn(name = "website_id")
     private Website associatedWebsite;
-
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || Hibernate.getClass(this) != Hibernate.getClass(o)) return false;
-        WebsiteAdmin that = (WebsiteAdmin) o;
-        return id != null && Objects.equals(id, that.id);
-    }
-
-    @Override
-    public int hashCode() {
-        return getClass().hashCode();
-    }
 }

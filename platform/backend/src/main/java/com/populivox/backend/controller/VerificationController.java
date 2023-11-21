@@ -21,6 +21,24 @@ public class VerificationController {
         this.verificationService = verificationService;
     }
 
+    /**
+     * Handles the email verification process.
+     * This method receives a verification token as a request parameter, processes it,
+     * and returns a {@link VerificationResponse}.
+     *
+     * <p>The process involves the following steps:
+     * <ul>
+     *     <li>Receiving a verification token sent to the user's email.</li>
+     *     <li>Calling the verification service to validate the token.</li>
+     *     <li>Logging the outcome of the verification process.</li>
+     * </ul>
+     *
+     * @param token The verification token received from the user.
+     *              This token is passed as a request parameter and is used to verify the user's email.
+     * @return A {@link VerificationResponse} that contains the result of the verification process,
+     *         including a success flag and a message detailing the outcome.
+     *         The response indicates whether the email verification was successful or not.
+     */
     @GetMapping
     public VerificationResponse verifyEmail(@RequestParam String token) {
         logger.info("Received verification request with token: {}", token);

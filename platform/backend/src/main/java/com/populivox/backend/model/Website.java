@@ -1,17 +1,12 @@
 package com.populivox.backend.model;
 
 import jakarta.persistence.*;
-import lombok.Getter;
-import lombok.RequiredArgsConstructor;
-import lombok.Setter;
-
+import lombok.Data;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import java.util.List;
 
-@Getter
-@Setter
-@RequiredArgsConstructor
+@Data
 @Entity
 @Table(name = "websites")
 public class Website {

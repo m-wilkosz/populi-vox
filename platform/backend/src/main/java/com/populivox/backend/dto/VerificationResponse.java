@@ -1,5 +1,8 @@
 package com.populivox.backend.dto;
 
+import lombok.Data;
+
+@Data
 public class VerificationResponse {
 
     private String message;
@@ -8,13 +11,5 @@ public class VerificationResponse {
     public VerificationResponse(String message, boolean success) {
         this.message = message;
         this.success = success;
-    }
-
-    public String getMessage() {
-        return message;
-    }
-
-    public boolean isSuccess() {
-        return success;
     }
 }

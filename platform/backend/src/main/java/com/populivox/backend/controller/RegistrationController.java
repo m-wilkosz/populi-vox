@@ -19,9 +19,19 @@ public class RegistrationController {
         this.registrationService = registrationService;
     }
 
+    /**
+     * This endpoint handles the registration of a new user and associated website.
+     * This method receives a registration request, processes it, and returns a registration response.
+     *
+     * @param request The {@link RegistrationRequest} object containing the necessary data
+     *                for registration, such as email, password, and website name.
+     *                This object should be provided in the body of the POST request.
+     *                It is validated to ensure that all required fields are present and correctly formatted.
+     * @return Returns a {@link RegistrationResponse} that contains the registration details
+     *         such as the email address and a message indicating the success of the registration process.
+     */
     @PostMapping
     public RegistrationResponse register(@RequestBody @Valid RegistrationRequest request) {
-        RegistrationResponse registrationResponse = registrationService.register(request);
-        return registrationResponse;
+        return registrationService.register(request);
     }
 }
