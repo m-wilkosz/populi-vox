@@ -81,6 +81,12 @@ public class RegistrationService {
      */
     @Transactional
     public RegistrationResponse register(RegistrationRequest request) {
+
+        if (request == null || request.getEmail() == null ||
+                request.getPassword() == null || request.getWebsiteName() == null) {
+            throw new IllegalArgumentException("Registration request cannot be null");
+        }
+
         // Check if email already exists
         if (websiteAdminRepository.existsByEmail(request.getEmail())) {
             throw new EmailAlreadyExistsException(request.getEmail());
