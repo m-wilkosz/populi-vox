@@ -3,8 +3,6 @@ package com.populivox.backend.service;
 import com.populivox.backend.dto.VerificationResponse;
 import com.populivox.backend.repository.WebsiteAdminRepository;
 import jakarta.transaction.Transactional;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.dao.DataAccessException;
 import org.springframework.stereotype.Service;
 import java.time.LocalDateTime;
@@ -41,6 +39,9 @@ public class VerificationService {
      */
     @Transactional
     public VerificationResponse verifyEmail(String token) {
+        if (token == null) {
+            throw new IllegalArgumentException("Token is null");
+        }
         return websiteAdminRepository.findByEmailVerificationToken(token)
                 .filter(admin -> !admin.getEmailVerificationExpiry().isBefore(LocalDateTime.now()))
                 .map(admin -> {
